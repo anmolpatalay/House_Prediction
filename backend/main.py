@@ -42,4 +42,4 @@ def predict(features: HouseFeatures):
 # def health():
 #     return {"status": "ok"}
 
-app.mount("/", StaticFiles(directory=r"frontend", html=True), name="static")
+app.mount("/", StaticFiles(directory=str(BASE_DIR / "frontend"), html=True), name="static")
