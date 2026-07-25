@@ -8,7 +8,7 @@ from pathlib import Path
 
 app = FastAPI(title="House Price Predictor")
 
-app.mount("/static", StaticFiles(directory=r"frontend", html=True), name="static")
+app.mount("/", StaticFiles(directory=r"frontend", html=True), name="static")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],   # tighten this in a real deployment
@@ -38,6 +38,6 @@ def predict(features: HouseFeatures):
     prediction = model.predict(input_df)[0]
     return {"predicted_price": round(float(prediction), 2)}
 
-@app.get("/")
-def health():
-    return {"status": "ok"}
+# @app.get("/")
+# def health():
+#     return {"status": "ok"}
