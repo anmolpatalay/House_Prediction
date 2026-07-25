@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>House Price Predictor</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 40px auto; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 6px; }
+    button { margin-top: 20px; padding: 10px; width: 100%; }
+    #result { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>House Price Predictor</h2>
+  <form id="predictForm">
+    <label>Area (sq ft)</label><input type="number" name="area" required>
+    <label>Bedrooms</label><input type="number" name="bedrooms" required>
+    <label>Bathrooms</label><input type="number" name="bathrooms" required>
+    <label>Stories</label><input type="number" name="stories" required>
+    <label>Main road?</label>
+    <select name="mainroad"><option>yes</option><option>no</option></select>
+    <label>Guest room?</label>
+    <select name="guestroom"><option>yes</option><option>no</option></select>
+    <label>Basement?</label>
+    <select name="basement"><option>yes</option><option>no</option></select>
+    <label>Hot water heating?</label>
+    <select name="hotwaterheating"><option>yes</option><option>no</option></select>
+    <label>Air conditioning?</label>
+    <select name="airconditioning"><option>yes</option><option>no</option></select>
+    <label>Parking spots</label><input type="number" name="parking" required>
+    <label>Preferred area?</label>
+    <select name="prefarea"><option>yes</option><option>no</option></select>
+    <label>Furnishing status</label>
+    <select name="furnishingstatus">
+      <option>furnished</option><option>semi-furnished</option><option>unfurnished</option>
+    </select>
+    <button type="submit">Predict Price</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("predictForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const payload = {};
+      formData.forEach((value, key) => {
+        payload[key] = ["area","bedrooms","bathrooms","stories","parking"].includes(key)
+          ? Number(value) : value;
+      });
+
+      const res = await fetch("http://localhost:8000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      document.getElementById("result").textContent =
+        "Predicted Price: ₹" + data.predicted_price.toLocaleString();
+    });
+  </script>
+</body>
+</html>
